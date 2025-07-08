@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { CreditScoreGauge } from "@/components/credit-score-gauge"
 import { InputSliders } from "@/components/input-sliders"
+import { ScenarioComparison } from "@/components/scenario-comparison"
 import { NaturalLanguageInput } from "@/components/natural-language-input"
 import { calculateCreditScore, type CreditInputs } from "@/lib/credit-score-calculator"
 import { Download, TrendingUp, MessageCircle, BarChart3 } from "lucide-react"
@@ -146,6 +147,14 @@ export default function CreditScoreSimulator() {
                 </Button>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="comparison">
+            <ScenarioComparison
+              currentInputs={inputs}
+              comparisonScenario={comparisonScenario}
+              onScenarioChange={setComparisonScenario}
+            />
           </TabsContent>
           </Tabs>
       </div>
