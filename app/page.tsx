@@ -1,103 +1,154 @@
-import Image from "next/image";
+"use client"
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { CreditScoreGauge } from "@/components/credit-score-gauge"
+import { InputSliders } from "@/components/input-sliders"
+import { NaturalLanguageInput } from "@/components/natural-language-input"
+import { calculateCreditScore, type CreditInputs } from "@/lib/credit-score-calculator"
+import { Download, TrendingUp, MessageCircle, BarChart3 } from "lucide-react"
 
-export default function Home() {
+export default function CreditScoreSimulator() {
+  const [inputs, setInputs] = useState<CreditInputs>({
+    income: 50000,
+    emi: 15000,
+    creditUsage: 30,
+    missedPayments: 0,
+    creditHistoryAge: 24,
+    activeLoans: 2,
+  })
+
+  const [score, setScore] = useState(750)
+  const [scoreDetails, setScoreDetails] = useState({
+    grade: "Good",
+    factors: [] as string[],
+  })
+
+  const [comparisonScenario, setComparisonScenario] = useState<CreditInputs | null>(null)
+  const [activeTab, setActiveTab] = useState("simulator")
+
+  useEffect(() => {
+    const result = calculateCreditScore(inputs)
+    setScore(result.score)
+    setScoreDetails(result.details)
+  }, [inputs])
+
+  const handleInputChange = (field: keyof CreditInputs, value: number) => {
+    setInputs((prev) => ({ ...prev, [field]: value }))
+  }
+
+  const handleNaturalLanguageInput = (parsedInputs: Partial<CreditInputs>) => {
+    setInputs((prev) => ({ ...prev, ...parsedInputs }))
+  }
+
+  const createScenario = () => {
+    setComparisonScenario({ ...inputs })
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">CreditSim-Navigate Your Credit with Confidence</h1>
+            <p className="text-gray-600 dark:text-gray-300">
+              Analyze and improve your credit score with advanced AI insights, scenario comparisons, and personalized recommendations
+            </p>
+          </div>
+          <div className="flex items-center gap-4">
+            <Badge variant="outline" className="bg-white dark:bg-gray-800">
+              Score: {score}
+            </Badge>
+            <ThemeToggle />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Main Content */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5 bg-white dark:bg-gray-800">
+            <TabsTrigger value="simulator" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Simulator
+            </TabsTrigger>
+            <TabsTrigger value="comparison" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Compare
+            </TabsTrigger>
+            <TabsTrigger value="projection" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Projection
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" />
+              AI Advisor
+            </TabsTrigger>
+            <TabsTrigger value="report" className="flex items-center gap-2">
+              <Download className="w-4 h-4" />
+              Report
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Simulator Tab */}
+          <TabsContent value="simulator" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Input Controls */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card className="bg-white dark:bg-gray-800">
+                  <CardHeader>
+                    <CardTitle>Tell Us About Your Finances</CardTitle>
+                    <CardDescription>Enter a short description of your income, expenses, and credit activity.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <NaturalLanguageInput onInputParsed={handleNaturalLanguageInput} />
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-white dark:bg-gray-800">
+                  <CardHeader>
+                    <CardTitle>Financial Parameters</CardTitle>
+                    <CardDescription>Adjust your financial details to see real-time score changes</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <InputSliders inputs={inputs} onInputChange={handleInputChange} />
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Score Display */}
+              <div className="space-y-6">
+                <Card className="bg-white dark:bg-gray-800">
+                  <CardHeader>
+                    <CardTitle>Your Credit Score</CardTitle>
+                    <CardDescription>Current score: {scoreDetails.grade}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <CreditScoreGauge score={score} />
+                    <div className="mt-4 space-y-2">
+                      <h4 className="font-semibold text-sm">Key Factors:</h4>
+                      <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                        {scoreDetails.factors.map((factor, index) => (
+                          <li key={index} className="flex items-start gap-2">
+                            <span className="w-1 h-1 bg-blue-500 rounded-full mt-2 flex-shrink-0" />
+                            {factor}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Button onClick={createScenario} className="w-full">
+                  Create Comparison Scenario
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+          </Tabs>
+      </div>
     </div>
-  );
+  )
 }
