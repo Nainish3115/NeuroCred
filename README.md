@@ -2,7 +2,7 @@
 
 A full-stack AI-powered credit simulation and advisory platform built with Next.js, Tailwind CSS, TypeScript, and OpenAI GPT-4o. This web app helps users understand, simulate, and improve their credit score through intuitive UI, natural language input, sliders, projection graphs, and personalized credit reports.
 
-[Live Demo →](https://your-vercel-url.vercel.app) 
+[Live Demo →](https://neuro-cred.vercel.app) 
 Downloadable Credit Report | Light/Dark Theme | Multi-language Support
 
 
