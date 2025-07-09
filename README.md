@@ -71,5 +71,6 @@ Downloadable Credit Report | Light/Dark Theme | Multi-language Support
 1. **Clone the Repo**
 ```bash
 git clone https://github.com/Nainish3115/NeuroCred.git
+npm install -g pnpm
 pnpm install
 pnpm dev
