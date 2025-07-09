@@ -92,3 +92,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+#google_translate_element select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: white;
+  color: black;
+}

@@ -1,4 +1,5 @@
 "use client"
+
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -8,6 +9,9 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { CreditScoreGauge } from "@/components/credit-score-gauge"
 import { InputSliders } from "@/components/input-sliders"
 import { ScenarioComparison } from "@/components/scenario-comparison"
+import { ScoreProjection } from "@/components/score-projection"
+import { AIChat } from "@/components/ai-chat"
+import { PDFReportGenerator } from "@/components/pdf-report-generator"
 import { NaturalLanguageInput } from "@/components/natural-language-input"
 import { calculateCreditScore, type CreditInputs } from "@/lib/credit-score-calculator"
 import { Download, TrendingUp, MessageCircle, BarChart3 } from "lucide-react"
@@ -149,6 +153,7 @@ export default function CreditScoreSimulator() {
             </div>
           </TabsContent>
 
+          {/* Comparison Tab */}
           <TabsContent value="comparison">
             <ScenarioComparison
               currentInputs={inputs}
@@ -156,7 +161,27 @@ export default function CreditScoreSimulator() {
               onScenarioChange={setComparisonScenario}
             />
           </TabsContent>
-          </Tabs>
+
+          {/* Projection Tab */}
+          <TabsContent value="projection">
+            <ScoreProjection inputs={inputs} currentScore={score} />
+          </TabsContent>
+
+          {/* AI Chat Tab */}
+          <TabsContent value="chat">
+            <AIChat inputs={inputs} currentScore={score} />
+          </TabsContent>
+
+          {/* Report Tab */}
+          <TabsContent value="report">
+            <PDFReportGenerator
+              inputs={inputs}
+              score={score}
+              scoreDetails={scoreDetails}
+              comparisonScenario={comparisonScenario}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )
