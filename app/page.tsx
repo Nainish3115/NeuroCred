@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { GoogleTranslate } from "@/components/google-translate"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -64,11 +65,12 @@ export default function CreditScoreSimulator() {
               Analyze and improve your credit score with advanced AI insights, scenario comparisons, and personalized recommendations
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap justify-end">
             <Badge variant="outline" className="bg-white dark:bg-gray-800">
               Score: {score}
             </Badge>
             <ThemeToggle />
+            <GoogleTranslate />
           </div>
         </div>
 

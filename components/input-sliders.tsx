@@ -19,13 +19,77 @@ interface InputSlidersProps {
   onInputChange: (field: keyof CreditInputs, value: number) => void;
 }
 
-// ✅ Safe client-only currency formatter
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(value);
+
+const SLIDER_CONFIG: Record<keyof CreditInputs, {
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  format: (value: number) => string;
+  icon: any;
+  description: string;
+}> = {
+  income: {
+    label: "Monthly Income",
+    min: 10000,
+    max: 2000000,
+    step: 5000,
+    format: formatCurrency,
+    icon: IndianRupee,
+    description: "Your monthly gross income",
+  },
+  emi: {
+    label: "Total EMI",
+    min: 0,
+    max: 1000000,
+    step: 1000,
+    format: formatCurrency,
+    icon: CreditCard,
+    description: "Total monthly EMI payments",
+  },
+  creditUsage: {
+    label: "Credit Utilization",
+    min: 0,
+    max: 100,
+    step: 5,
+    format: (value: number) => `${value}%`,
+    icon: Building,
+    description: "Percentage of credit limit used",
+  },
+  missedPayments: {
+    label: "Missed Payments (Last 24 months)",
+    min: 0,
+    max: 24,
+    step: 1,
+    format: (value: number) => `${value} payments`,
+    icon: AlertTriangle,
+    description: "Number of missed payments in the last 2 year",
+  },
+  creditHistoryAge: {
+    label: "Credit History Age",
+    min: 6,
+    max: 120,
+    step: 6,
+    format: (value: number) => `${value} months`,
+    icon: Clock,
+    description: "Age of your oldest credit account",
+  },
+  activeLoans: {
+    label: "Active Loans",
+    min: 0,
+    max: 10,
+    step: 1,
+    format: (value: number) => `${value} loans`,
+    icon: Calendar,
+    description: "Number of active loan accounts",
+  },
+};
 
 export function InputSliders({ inputs, onInputChange }: InputSlidersProps) {
   const [isClient, setIsClient] = useState(false);
@@ -34,75 +98,14 @@ export function InputSliders({ inputs, onInputChange }: InputSlidersProps) {
     setIsClient(true);
   }, []);
 
-  const sliderConfigs = [
-    {
-      key: "income" as keyof CreditInputs,
-      label: "Monthly Income",
-      min: 10000,
-      max: 200000,
-      step: 5000,
-      format: formatCurrency,
-      icon: IndianRupee,
-      description: "Your monthly gross income",
-    },
-    {
-      key: "emi" as keyof CreditInputs,
-      label: "Total EMI",
-      min: 0,
-      max: 100000,
-      step: 1000,
-      format: formatCurrency,
-      icon: CreditCard,
-      description: "Total monthly EMI payments",
-    },
-    {
-      key: "creditUsage" as keyof CreditInputs,
-      label: "Credit Utilization",
-      min: 0,
-      max: 100,
-      step: 5,
-      format: (value: number) => `${value}%`,
-      icon: Building,
-      description: "Percentage of credit limit used",
-    },
-    {
-      key: "missedPayments" as keyof CreditInputs,
-      label: "Missed Payments (Last 12 months)",
-      min: 0,
-      max: 12,
-      step: 1,
-      format: (value: number) => `${value} payments`,
-      icon: AlertTriangle,
-      description: "Number of missed payments in the last year",
-    },
-    {
-      key: "creditHistoryAge" as keyof CreditInputs,
-      label: "Credit History Age",
-      min: 6,
-      max: 120,
-      step: 6,
-      format: (value: number) => `${value} months`,
-      icon: Clock,
-      description: "Age of your oldest credit account",
-    },
-    {
-      key: "activeLoans" as keyof CreditInputs,
-      label: "Active Loans",
-      min: 0,
-      max: 10,
-      step: 1,
-      format: (value: number) => `${value} loans`,
-      icon: Calendar,
-      description: "Number of active loan accounts",
-    },
-  ];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {sliderConfigs.map((config) => {
+      {Object.entries(SLIDER_CONFIG).map(([key, config]) => {
+        const typedKey = key as keyof CreditInputs;
         const Icon = config.icon;
+
         return (
-          <Card key={config.key} className="p-4">
+          <Card key={typedKey} className="p-4">
             <CardContent className="p-0">
               <div className="flex items-center gap-3 mb-3">
                 <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -120,7 +123,7 @@ export function InputSliders({ inputs, onInputChange }: InputSlidersProps) {
                     {isClient ? config.format(config.min) : ""}
                   </span>
                   <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">
-                    {isClient ? config.format(inputs[config.key]) : ""}
+                    {isClient ? config.format(inputs[typedKey]) : ""}
                   </span>
                   <span className="text-sm text-gray-600 dark:text-gray-300">
                     {isClient ? config.format(config.max) : ""}
@@ -128,10 +131,8 @@ export function InputSliders({ inputs, onInputChange }: InputSlidersProps) {
                 </div>
 
                 <Slider
-                  value={[inputs[config.key]]}
-                  onValueChange={(value) =>
-                    onInputChange(config.key, value[0])
-                  }
+                  value={[inputs[typedKey]]}
+                  onValueChange={(value) => onInputChange(typedKey, value[0])}
                   min={config.min}
                   max={config.max}
                   step={config.step}
