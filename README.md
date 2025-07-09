@@ -70,5 +70,6 @@ Downloadable Credit Report | Light/Dark Theme | Multi-language Support
 
 1. **Clone the Repo**
 ```bash
-git clone https://github.com/your-username/ai-credit-simulator.git
-cd ai-credit-simulator
+git clone https://github.com/Nainish3115/NeuroCred.git
+pnpm install
+pnpm dev
